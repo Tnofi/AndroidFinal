@@ -24,6 +24,7 @@ public class ProcessActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_process);
         ButterKnife.bind(this);
+        //Messing with handler threads, the loading bar doesn't have an actual purpose other than appearance at the moment
         new Thread(new Runnable() {
             @Override
             public void run() {
