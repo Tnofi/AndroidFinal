@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".loginScreen"
+    android:background="#111">
+
+    <Button
+        android:id="@+id/btn_guest"
+        android:layout_width="156dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/btn_forgotPW"
+        android:layout_marginStart="14dp"
+        android:text="Continue as Guest"
+        tools:layout_editor_absoluteX="43dp"
+        tools:layout_editor_absoluteY="444dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="14dp" />
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="266dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="172dp"
+        android:text="Login"
+        tools:layout_editor_absoluteX="132dp"
+        tools:layout_editor_absoluteY="348dp" />
+
+    <Button
+        android:id="@+id/btn_forgotPW"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="105dp"
+        android:layout_marginEnd="14dp"
+        android:text="Forgot Password"
+        tools:layout_editor_absoluteX="220dp"
+        tools:layout_editor_absoluteY="444dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="14dp" />
+
+    <Button
+        android:id="@+id/btn_createAcc"
+        android:layout_width="266dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="35dp"
+        android:text="Create a New Account"
+        tools:layout_editor_absoluteX="43dp"
+        tools:layout_editor_absoluteY="544dp" />
+
+    <TextView
+        android:id="@+id/tvVEA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
+        android:text="VEA"
+        android:textSize="90dp"
+        />
+
+    <TextView
+        android:id="@+id/tvLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="191dp"
+        android:text="Username:" />
+
+    <TextView
+        android:id="@+id/tvPW"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Password:" />
+
+    <EditText
+        android:id="@+id/etUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvLogin"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:hint="(please enter username)"
+        android:textAlignment="center"/>
+
+    <EditText
+        android:id="@+id/etpasswordinput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvPW"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:hint="(please enter password)"
+        android:textAlignment="center" />
+
+
+
+</RelativeLayout>

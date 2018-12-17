@@ -4,22 +4,29 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.FaceDetector;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
 import com.google.api.services.vision.v1.model.Image;
+
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.*;
@@ -47,15 +54,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     FaceDetector detector;
     DisplayMetrics displayMetrics = new DisplayMetrics();
     private String api;
 
     @BindView(R.id.ivCam) ImageView mImageView;
-    @BindView(R.id.btnSubmit) Button bSubmit;
+    @BindView(R.id.btnImport) Button bImport;
+    @BindView(R.id.tlbllogo)TextView logolbl;
     Feature visionFeature;
+    private AdView mAdView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +78,10 @@ public class MainActivity extends AppCompatActivity {
         visionFeature = new Feature();
         visionFeature.setType("LANDMARK_DETECTION");
         visionFeature.setMaxResults(1);
-
+        logolbl.setText(getIntent().getStringExtra("usrnme"));
+    //   mAdView = findViewById(R.id.adView);
+    //   AdRequest adRequest = new AdRequest.Builder().build();
+    //   mAdView.loadAd(adRequest);
     }
 
 
@@ -79,41 +92,21 @@ public class MainActivity extends AppCompatActivity {
         final Intent camIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (camIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(camIntent, 1);
-            bSubmit.setEnabled(true);
-            // Create new thread
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-
-                    // TODO: Add code to turn the picture that was just taken into proper input for Vision API request
-                }
-                Image inputImage;
-                //inputImage.encodeContent(photoData);
-            });
-        }
-    }
-
-    @OnClick(R.id.btnSubmit)
-    public void submitRequest(View view){
-
-    }
-
-
-    private static class mAsyncTask extends AsyncTask<Void, Void, Void>
-    {
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            //InputStream iStream = getResources().openRawResource(mImageView);
-            //byte[] photoData = IOUtils.toByteArray(iStream);
 
         }
     }
 
+    @OnClick(R.id.btnImport)
+    public void ImportImage(View view){
+        final Intent galleryIntent = new Intent(Intent.ACTION_PICK, Uri.parse("content://media/internal/images/media"));
+        startActivityForResult(galleryIntent, 1);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+        return false;
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -143,11 +136,14 @@ public class MainActivity extends AppCompatActivity {
         annotateImageRequests.add(annotateImageReq);
 
         new AsyncTask<Object, Void, String>() {
+            String url = "https://www.wikipedia.org/wiki/";
+
             @Override
             protected String doInBackground(Object... params) {
                 try {
                     String message = "";
 
+                    //Vision feature requirements for new objects
                     HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
                     JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
                     //Builder initializes web connections
@@ -166,18 +162,25 @@ public class MainActivity extends AppCompatActivity {
                     ImageProperties imageProperties = imageResponses.getImagePropertiesAnnotation();
 
                     return convertResponseToString(response);
-                } catch (GoogleJsonResponseException e) {
-                    Log.d("MainActivity", "failed to make API request because " + e.getContent());
-                } catch (IOException e) {
-                    Log.d("MainActivity", "failed to make API request because of other IOException " + e.getMessage());
+                } catch (GoogleJsonResponseException ex) {
+                    Log.d("MainActivity", "failed to make API request because " + ex.getContent());
+                } catch (IOException ex) {
+                    Log.d("MainActivity", "failed to make API request because of other IOException " + ex.getMessage());
                 }
-                return "Cloud Vision API request failed. Check logs for details.";
+                return "Cloud Vision API request failed.";
             }
 
             protected void onPostExecute(String result) {
                 //Textview visionAPIData.setText(result);
-                Toast resultToast = Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG);
-                resultToast.show();
+                if (result.equals("Nothing Found") || result.contains("failed")){
+                    Toast resultToast = Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG);
+                    resultToast.show();
+                } else {
+                    url += result;
+                    Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
+                startActivity(viewIntent);
+                }
+                //TODO: Direct to the results page, bringing up the information derived from a webpage (Wikipedia)
 
             }
         }.execute();
@@ -218,8 +221,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (entityAnnotation != null) {
             for (EntityAnnotation entity : entityAnnotation) {
-                message = message + "    " + entity.getDescription() + " " + entity.getScore();
-                message += "\n";
+                message = entity.getDescription();
+                message.replaceAll(" ", "_");
             }
         } else {
             message = "Nothing Found";

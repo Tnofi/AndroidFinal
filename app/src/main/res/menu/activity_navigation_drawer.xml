@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_camera"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Take Picture" />
+
+        <item
+            android:id="@+id/nav_import"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Import" />
+        <item
+            android:id="@+id/nav_favorites"
+            android:icon="@drawable/ic_favorite"
+            android:title="Favorites" />
+
+    </group>
+
+    <item android:title="User Settings">
+        <menu>
+            <item
+                android:title="Log Out"
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_menu_manage" />
+        </menu>
+    </item>
+
+</menu>
